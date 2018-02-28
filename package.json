@@ -1,0 +1,26 @@
+{
+  "name": "web-crawler",
+  "version": "1.0.0",
+  "description": "Web crawler for TMDB & LetterBoxd",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freeride8/web-crawler.git"
+  },
+  "author": "Alexander Targov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freeride8/web-crawler/issues"
+  },
+  "homepage": "https://github.com/freeride8/web-crawler#readme",
+  "dependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.1",
+    "eslint-config-google": "^0.9.1",
+    "jquery": "^3.3.1",
+    "jsdom": "^11.6.2"
+  }
+}
