@@ -2,12 +2,14 @@ const {
     JSDOM,
 } = require('jsdom');
 const $init = require('jquery');
+const {
+    domParser,
+} = require('./parser/dom-parser.js');
 const entryPoint = 'https://www.themoviedb.org/movie?page=1';
 const mainDomain = 'https://www.themoviedb.org';
 
 const extractPageUrls = async (url) => {
-    const dom = await JSDOM.fromURL(url);
-    const $ = $init(dom.window);
+    const $ = await domParser(url);
     const pageContentSelector = '.results .image_content';
     const links = $(pageContentSelector).find('a.result');
     return [...links].map((link) => $(link))
@@ -15,7 +17,6 @@ const extractPageUrls = async (url) => {
 };
 
 const goInPage = async () => {
-    // checking if paralleling works
     const pageUrls1 = extractPageUrls(mainDomain + '/movie?page=1');
     const pageUrls2 = extractPageUrls(mainDomain + '/movie?page=2');
 
@@ -26,12 +27,9 @@ const goInPage = async () => {
 };
 
 const extractMovie = (movieUrl) => {
-    movieUrl.forEach(async (element) => {
-        const fullUrl = mainDomain + element;
-        const dom = await JSDOM.fromURL(fullUrl);
-        const $ = $init(dom.window);
-
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        const fullUrl = mainDomain + movieUrl;
+        domParser(fullUrl).then(($) => {
             const titleSelector = '.title h2';
             const ratingSelector = '.user_score_chart';
             const runtimeSelector = '.facts p:nth-child(9)';
@@ -41,15 +39,25 @@ const extractMovie = (movieUrl) => {
                 rating: $(ratingSelector).attr('data-percent'),
                 runtime: $(runtimeSelector).text(),
             };
-            console.log(obj);
             resolve(obj);
         });
     });
 };
 
+const arrayProcessing = async (array) => {
+    const results = [];
+    for (const entry of array) {
+        results.push(await extractMovie(entry));
+    }
+    return results;
+};
+
 const parallel = async (movieUrl1, movieUrl2) => {
-    const task1 = extractMovie(movieUrl1);
-    const task2 = extractMovie(movieUrl2);
+    // const res = await Promise
+        // .all([arrayWork(movieUrl1), arrayWork(movieUrl2)]);
+    // return res;
+    const task1 = arrayProcessing(movieUrl1);
+    const task2 = arrayProcessing(movieUrl2);
 
     return {
         res1: await task1,
@@ -58,14 +66,16 @@ const parallel = async (movieUrl1, movieUrl2) => {
 };
 
 const run = async () => {
-    let data;
+    const date = Date.now();
     try {
         const urls = await goInPage();
-        data = await parallel(urls.page1, urls.page2);
-        console.log(data);
+        await parallel(urls.page1, urls.page2).then((result) => {
+            console.log(result);
+        });
     } catch (err) {
         console.log(err);
     }
+    console.log('Took ' + (Date.now() - date));
 };
 
 run();
