@@ -8,7 +8,6 @@ const moviesImdb = [];
 
 const loadMoviesTmdb = async (mainDomain, array) => {
     const parallels = 50;
-
     const loadMovieTmdb = async () => {
         if (array.length === 0) {
             return Promise.resolve();
@@ -28,7 +27,6 @@ const loadMoviesTmdb = async (mainDomain, array) => {
 
 const loadMoviesImdb = async (mainDomain, array) => {
     const parallels = 100;
-
     const loadMovieImdb = async () => {
         if (array.length === 0) {
             return Promise.resolve();
