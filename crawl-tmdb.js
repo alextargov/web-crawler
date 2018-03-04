@@ -1,35 +1,23 @@
 const {
-    JSDOM,
-} = require('jsdom');
-const $init = require('jquery');
-const {
     domParser,
 } = require('./parser/dom-parser.js');
-const entryPoint = 'https://www.themoviedb.org/movie?page=1';
+
+const entryPoint = 'https://www.themoviedb.org/movie?page=';
 const mainDomain = 'https://www.themoviedb.org';
 
 const extractPageUrls = async (url) => {
     const $ = await domParser(url);
     const pageContentSelector = '.results .image_content';
     const links = $(pageContentSelector).find('a.result');
+    console.log(links.html())
     return [...links].map((link) => $(link))
         .map(($link) => $link.attr('href'));
 };
 
-const goInPage = async () => {
-    const pageUrls1 = extractPageUrls(mainDomain + '/movie?page=1');
-    const pageUrls2 = extractPageUrls(mainDomain + '/movie?page=2');
-
-    return {
-        page1: await pageUrls1,
-        page2: await pageUrls2,
-    };
-};
-
 const extractMovie = (movieUrl) => {
     return new Promise((resolve, reject) => {
-        const fullUrl = mainDomain + movieUrl;
-        domParser(fullUrl).then(($) => {
+        const url = mainDomain + movieUrl;
+        domParser(url).then(($) => {
             const titleSelector = '.title h2';
             const ratingSelector = '.user_score_chart';
             const runtimeSelector = '.facts p:nth-child(9)';
@@ -44,38 +32,57 @@ const extractMovie = (movieUrl) => {
     });
 };
 
-const arrayProcessing = async (array) => {
-    const results = [];
-    for (const entry of array) {
-        results.push(await extractMovie(entry));
+const movies = [];
+const loadMovie = async (array) => {
+    if (array.length === 0) {
+        return Promise.resolve();
     }
-    return results;
+
+    const id = array.pop();
+    const movie = await extractMovie(id);
+
+    movies.push(movie);
+    return loadMovie(array);
 };
 
-const parallel = async (movieUrl1, movieUrl2) => {
-    // const res = await Promise
-        // .all([arrayWork(movieUrl1), arrayWork(movieUrl2)]);
-    // return res;
-    const task1 = arrayProcessing(movieUrl1);
-    const task2 = arrayProcessing(movieUrl2);
+const loadMovies = (array) => {
+    const parallels = 100;
 
-    return {
-        res1: await task1,
-        res2: await task2,
-    };
+    return Promise.all(
+        Array.from({
+            length: parallels,
+        })
+        .map(() => loadMovie(array)));
 };
+
+const loadAll = async () => {
+    const pages = 5;
+    const arr = [];
+
+    await Promise.all(
+        Array.from({
+            length: pages,
+        })
+        .map((value, index) => {
+            const url = entryPoint + (index + 1);
+            return extractPageUrls(url).then((res) => {
+                res.forEach((el) => {
+                    arr.push(el);
+                });
+            });
+        })
+    );
+    return loadMovies(arr);
+};
+
+const start = new Date();
 
 const run = async () => {
-    const date = Date.now();
-    try {
-        const urls = await goInPage();
-        await parallel(urls.page1, urls.page2).then((result) => {
-            console.log(result);
-        });
-    } catch (err) {
-        console.log(err);
-    }
-    console.log('Took ' + (Date.now() - date));
+    await loadAll();
+    const end = new Date();
+    //console.log(movies);
+    console.log(movies.length);
+    console.log(end - start);
 };
 
 run();
