@@ -2,8 +2,7 @@ const {
     domParser,
 } = require('../parser/dom-parser');
 
-const extractPageUrls = async (url) => {
-    console.log(url)
+const extractPageUrlsImdb = async (url) => {
     const $ = await domParser(url);
     const pageContentSelector = '#main .lister-item .lister-item-header';
     const links = $(pageContentSelector).find('a');
@@ -11,6 +10,15 @@ const extractPageUrls = async (url) => {
         .map(($link) => $link.attr('href'));
 };
 
+const extractPageUrlsTmdb = async (url) => {
+    const $ = await domParser(url);
+    const pageContentSelector = '.results .image_content';
+    const links = $(pageContentSelector).find('a.result');
+    return [...links].map((link) => $(link))
+        .map(($link) => $link.attr('href'));
+};
+
 module.exports = {
-    extractPageUrls,
+    extractPageUrlsImdb,
+    extractPageUrlsTmdb,
 };

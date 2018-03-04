@@ -1,32 +1,52 @@
 const {
-    extractPageUrls,
+    extractPageUrlsImdb,
+    extractPageUrlsTmdb,
 } = require('./extract-pages-urls');
 const {
-    loadMovies,
+    loadMoviesImdb,
+    loadMoviesTmdb,
 } = require('../movies/load-movies');
 
-const loadPages = async (mainDomain, entryPoint) => {
+const loadPagesImdb = async (mainDomain, entryPoint) => {
     const pages = 2;
     const arr = [];
-
     await Promise.all(
         Array.from({
             length: pages,
         })
         .map((value, index) => {
-            const url = entryPoint + (index + 1) + '/';
-            return extractPageUrls(url).then((res) => {
+            const url = entryPoint + (index + 1) + '&ref_=adv_nxt';
+            return extractPageUrlsImdb(url).then((res) => {
                 res.forEach((el) => {
                     arr.push(el);
                 });
-            }).catch((rej) => {
-                console.log(rej);
             });
         })
     );
-    return loadMovies(mainDomain, arr);
+    return loadMoviesImdb(mainDomain, arr);
+};
+
+
+const loadPagesTmdb = async (mainDomain, entryPoint) => {
+    const pages = 5;
+    const arr = [];
+    await Promise.all(
+        Array.from({
+            length: pages,
+        })
+        .map((value, index) => {
+            const url = entryPoint + (index + 1);
+            return extractPageUrlsTmdb(url).then((res) => {
+                res.forEach((el) => {
+                    arr.push(el);
+                });
+            });
+        })
+    );
+    return loadMoviesTmdb(mainDomain, arr);
 };
 
 module.exports = {
-    loadPages,
+    loadPagesImdb,
+    loadPagesTmdb,
 };
