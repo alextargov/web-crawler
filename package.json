@@ -22,7 +22,10 @@
     "eslint-config-google": "^0.9.1",
     "jquery": "^3.3.1",
     "jsdom": "^11.6.2",
+    "mysql": "^2.15.0",
     "mysql2": "^1.5.2",
-    "sequelize": "^4.35.2"
+    "sequelize": "^4.35.2",
+    "sequelize-auto-migrations": "^1.0.2",
+    "yargs": "^11.0.0"
   }
 }

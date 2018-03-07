@@ -15,7 +15,7 @@ const loadPagesImdb = async (mainDomain, entryPoint) => {
             length: pages,
         })
         .map((value, index) => {
-            const url = entryPoint + (index + 1) + '&ref_=adv_nxt';
+            const url = entryPoint + (index + 1) + '&ref_=adv_nxt&view=simple';
             return extractPageUrlsImdb(url).then((res) => {
                 res.forEach((el) => {
                     arr.push(el);
@@ -25,7 +25,6 @@ const loadPagesImdb = async (mainDomain, entryPoint) => {
     );
     return loadMoviesImdb(mainDomain, arr);
 };
-
 
 const loadPagesTmdb = async (mainDomain, entryPoint) => {
     const pages = 5;
