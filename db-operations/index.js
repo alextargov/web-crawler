@@ -26,6 +26,9 @@ const {
 const {
     getAllInfo,
 } = require('./get-all-info');
+const {
+    sort,
+} = require('./sort');
 
 module.exports = {
     getAllInfo,
@@ -35,6 +38,7 @@ module.exports = {
     filterLanguage,
     searchMovie,
     searchDirector,
+    sort,
     deleteEntries,
     initialInsert,
     addEntry,

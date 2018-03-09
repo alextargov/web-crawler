@@ -28,7 +28,9 @@ const filterGenre = async (input) => {
     }
 
     result.forEach((element) => {
-        output.push(element.title);
+        output.push({
+            title: element.title,
+        });
     });
     return output;
 };

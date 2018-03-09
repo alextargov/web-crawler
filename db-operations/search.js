@@ -41,7 +41,7 @@ const searchDirector = async (input) => {
         });
         output.push({
             directors,
-            movie: m.title,
+            title: m.title,
         });
     });
 
@@ -93,6 +93,7 @@ const searchMovie = async (input) => {
             title: movie.title,
             runtime: movie.runtime,
             rating: movie.rating,
+            revenue: movie.revenue,
             directors: [],
             genres: [],
             languages: [],

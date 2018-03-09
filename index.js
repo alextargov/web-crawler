@@ -8,6 +8,7 @@ const {
     filterLanguage,
     searchMovie,
     searchDirector,
+    sort,
 } = require('./db-operations');
 const {
     genres,
@@ -37,6 +38,9 @@ const argv = yargs.usage('usage: $0 <command>')
                                     type: 'number',
                                 },
                             })
+                            .conflicts('gt', ['lt', 'eq'])
+                            .conflicts('lt', ['gt', 'eq'])
+                            .conflicts('eq', ['lt', 'gt'])
                             .help('h')
                             .alias('h', 'help');
                     }, (args) => {
@@ -52,7 +56,28 @@ const argv = yargs.usage('usage: $0 <command>')
                             return;
                         }
                         result.then((res) => {
-                            console.log(res);
+                            console.log(columnify(res, {
+                                columnSplitter: ' | ',
+                                config: {
+                                    title: {
+                                        align: 'center',
+                                        maxWidth: 60,
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                    runtime: {
+                                        align: 'center',
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                },
+                            }));
                         });
                     }).command('rating', 'filter entries by rating', (rating) => {
                         rating.usage('usage: $0 statistics filter rating')
@@ -69,7 +94,10 @@ const argv = yargs.usage('usage: $0 <command>')
                                     describe: 'Equals',
                                     type: 'number',
                                 },
-                            });
+                            })
+                            .conflicts('gt', ['lt', 'eq'])
+                            .conflicts('lt', ['gt', 'eq'])
+                            .conflicts('eq', ['lt', 'gt']);
                     }, (args) => {
                         let result;
                         if (args.gt) {
@@ -83,7 +111,28 @@ const argv = yargs.usage('usage: $0 <command>')
                             return;
                         }
                         result.then((res) => {
-                            console.log(res);
+                            console.log(columnify(res, {
+                                columnSplitter: ' | ',
+                                config: {
+                                    title: {
+                                        align: 'center',
+                                        maxWidth: 60,
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                    rating: {
+                                        align: 'center',
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                },
+                            }));
                         });
                     }).command('language', 'filter entries by language', (lang) => {
                         lang.usage('usage: $0 statistics filter language [name]')
@@ -106,7 +155,20 @@ const argv = yargs.usage('usage: $0 <command>')
                             return;
                         }
                         result.then((res) => {
-                            console.log(res);
+                            console.log(columnify(res, {
+                                columnSplitter: ' | ',
+                                config: {
+                                    title: {
+                                        align: 'center',
+                                        maxWidth: 60,
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                },
+                            }));
                         });
                     }).command('genre', 'filter entries by genre', (genre) => {
                         genre.usage('usage: $0 statistics filter genre [name]')
@@ -130,7 +192,20 @@ const argv = yargs.usage('usage: $0 <command>')
                             return;
                         }
                         result.then((res) => {
-                            console.log(res);
+                            console.log(columnify(res, {
+                                columnSplitter: ' | ',
+                                config: {
+                                    title: {
+                                        align: 'center',
+                                        maxWidth: 60,
+                                        headingTransform: (heading) => {
+                                            return '***' +
+                                                heading.toUpperCase() +
+                                                '***';
+                                        },
+                                    },
+                                },
+                            }));
                         });
                     });
             }).command('search', 'search entries', (search) => {
@@ -139,13 +214,14 @@ const argv = yargs.usage('usage: $0 <command>')
                         director: {
                             describe: 'Seacrh for a director',
                             type: 'string',
-                            alias: 'dn',
+                            alias: 'd',
                         },
                         movie: {
                             type: 'string',
-                            alias: 'mt',
+                            alias: 'm',
                         },
                     })
+                    .conflicts('director', 'movie')
                     .help('h')
                     .alias('h', 'help');
             }, (args) => {
@@ -159,7 +235,145 @@ const argv = yargs.usage('usage: $0 <command>')
                     return;
                 }
                 result.then((res) => {
-                    console.log(res);
+                    console.log(columnify(res, {
+                        preserveNewLines: true,
+                        config: {
+                            title: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            runtime: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            rating: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            revenue: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            directors: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            genres: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            languages: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                        },
+                        columnSplitter: ' | ',
+                    }));
+                });
+            }).command('sort', 'sort entries', (sorts) => {
+                sorts.usage('usage: $0 statistics sort [option]')
+                    .options({
+                        by: {
+                            describe: 'Sort by',
+                            type: 'string',
+                            alias: 'b',
+                            demandOption: true,
+                            choices: ['revenue', 'rating', 'runtime', 'title'],
+                        },
+                        order: {
+                            describe: 'Sort by ascending/descending' +
+                                 'order. By default it is descending.',
+                            type: 'string',
+                            alias: 'o',
+                            choices: ['asc', 'desc'],
+                        },
+                    })
+                    .help('h')
+                    .alias('h', 'help');
+            }, (args) => {
+                let result;
+                if (!args.by) {
+                    console.log('Not valid option.');
+                    return;
+                }
+                if (args.order) {
+                    result = sort(args.by, args.order);
+                } else {
+                    result = sort(args.by);
+                }
+                result.then((res) => {
+                    console.log(columnify(res, {
+                        preserveNewLines: true,
+                        config: {
+                            title: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            runtime: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            rating: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                            },
+                            revenue: {
+                                align: 'center',
+                                headingTransform: (heading) => {
+                                    return '***' +
+                                        heading.toUpperCase() +
+                                        '***';
+                                },
+                                dataTransform: (data) => {
+                                    if (data !== 'n/a') {
+                                        return '$' + data;
+                                    }
+                                    return data;
+                                },
+                            },
+                        },
+                        columnSplitter: ' | ',
+                    }));
                 });
             });
     })
@@ -174,24 +388,67 @@ const argv = yargs.usage('usage: $0 <command>')
                 config: {
                     title: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '***' +
+                                heading.toUpperCase() +
+                                '***';
+                        },
                     },
                     runtime: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '*' + heading.toUpperCase() + '*';
+                        },
                     },
                     rating: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '*' + heading.toUpperCase() + '*';
+                        },
                     },
                     revenue: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '***' +
+                                heading.toUpperCase() +
+                                '***';
+                        },
                     },
                     directors: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '***' +
+                                heading.toUpperCase() +
+                                '***';
+                        },
+                        dataTransform: (data) => {
+                            if (data.indexOf(',') !== -1) {
+                                return data.split(',').join(', ');
+                            }
+                            return data;
+                        },
                     },
                     genres: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '***' +
+                                heading.toUpperCase() +
+                                '***';
+                        },
+                        dataTransform: (data) => {
+                            if (data.indexOf(',') !== -1) {
+                                return data.split(',').join(', ');
+                            }
+                            return data;
+                        },
                     },
                     languages: {
                         align: 'center',
+                        headingTransform: (heading) => {
+                            return '***' +
+                                heading.toUpperCase() +
+                                '***';
+                        },
                     },
                 },
                 columnSplitter: ' | ',
@@ -202,10 +459,10 @@ const argv = yargs.usage('usage: $0 <command>')
         update.usage('usage: $0 update')
             .help('h')
             .alias('h', 'help');
-    }, (args) => {
-        runCrawler().then((res) => {});
+    }, async (args) => {
+        await runCrawler();
     })
-
+    .demandCommand(1)
     .version(false)
     .help('h')
     .alias('h', 'help')

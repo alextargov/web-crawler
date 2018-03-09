@@ -8,7 +8,7 @@ const {
 } = require('../movies/load-movies');
 
 const loadPagesImdb = async (mainDomain, entryPoint) => {
-    const pages = 2;
+    const pages = 6;
     const arr = [];
     await Promise.all(
         Array.from({

@@ -44,8 +44,8 @@ const getAllInfo = async () => {
             directors: [],
             genres: [],
             languages: [],
-        }
-        
+        };
+
         movie.Directors.forEach((d) => {
             obj.directors.push(d.director);
         });
@@ -61,7 +61,7 @@ const getAllInfo = async () => {
         if (obj.genres.length === 0) {
             obj.genres = 'n/a';
         }
-        if (obj.languages.length === 0) {
+        if (obj.languages.length === 0 || obj.languages[0] === null) {
             obj.languages = 'n/a';
         }
         if (!obj.runtime) {
@@ -80,4 +80,4 @@ const getAllInfo = async () => {
 
 module.exports = {
     getAllInfo,
-}
+};

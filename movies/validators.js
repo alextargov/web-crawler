@@ -6,9 +6,8 @@ const availableGenres = new Set([...allGenres.genres]);
 const validateImdb = ($, selectors) => {
     let directors = [];
     let language;
-    let revenue;
     let runtime;
-
+    let revenue;
     $(selectors.directorSelector).first()
         .find('.itemprop')
         .each((index, el) => {
@@ -32,20 +31,21 @@ const validateImdb = ($, selectors) => {
                 .split('|').map((e) => e.trim());
         }
     }
-    if ($($(selectors.revenueSelector).get(9)).text().slice(28).length < 4) {
+    const revenueStartIndex = $(selectors.revenueSelector)
+        .text()
+        .lastIndexOf('$');
+    if (revenueStartIndex === -1) {
         revenue = null;
     } else {
-        revenue = $($(selectors.revenueSelector).get(9))
+        revenue = $(selectors.revenueSelector)
             .text()
+            .slice(revenueStartIndex, revenueStartIndex + 20)
             .trim()
-            .slice(28)
-            .split(' ')[0]
+            .match(/(\d+\,?)([^\s]+)/)[0]
             .replace(/,/g, '');
-        if (revenue.indexOf('$') !== 0) {
-            revenue = null;
-        }
+        revenue = +revenue;
     }
-    const genre = $(selectors.genresSelector).text()
+    const genres = $(selectors.genresSelector).text()
         .split(' ')
         .filter((element) => availableGenres.has(element.toLowerCase()))
         .map((element) => element.toLowerCase().trim());
@@ -71,7 +71,7 @@ const validateImdb = ($, selectors) => {
         title,
         rating,
         runtime,
-        genre,
+        genres,
         directors,
         language,
         revenue,
@@ -122,7 +122,9 @@ const validateTmdb = ($, selectors) => {
             .trim()
             .slice(8)
             .replace(/,/g, '')
-            .split('.')[0];
+            .split('.')[0]
+            .slice(1);
+        revenue = +revenue;
     }
     const title = $(selectors.titleSelector).html();
     let rating = +($(selectors.ratingSelector).attr('data-percent')) / 10;
