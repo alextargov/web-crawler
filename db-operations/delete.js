@@ -9,7 +9,7 @@ const {
     movie_director,
 } = db;
 
-const deleteEntries = async () => {    
+const deleteEntries = async () => {
     await movie_genre.destroy({
         where: {},
     });
@@ -36,4 +36,3 @@ const deleteEntries = async () => {
 module.exports = {
     deleteEntries,
 };
-

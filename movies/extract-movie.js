@@ -4,7 +4,7 @@ const {
 
 const {
     addEntry,
-} = require('../db-operations/inserts');
+} = require('../db-operations');
 
 const {
     validateImdb,
@@ -35,10 +35,8 @@ const extractMovieImdb = (mainDomain, movieUrl) => {
                 revenueSelector,
             };
             const validatedData = validateImdb($, selectors);
-            addEntry(validatedData)
-                resolve(validatedData);
-       
-            
+            addEntry(validatedData);
+            resolve(validatedData);
         });
     });
 };
@@ -69,9 +67,8 @@ const extractMovieTmdb = (mainDomain, movieUrl) => {
                     '.content_wrapper .split:nth-child(2) .crew_wrapper';
                 const validateDirector = validateTmdbCast($, directorSelector);
                 validatedData.directors = validateDirector;
-                addEntry(validatedData)
-                    resolve(validatedData);
-             
+                addEntry(validatedData);
+                resolve(validatedData);
             });
         });
     });
