@@ -17,7 +17,7 @@ const {
     searchVisual,
     sortVisual,
     getAllVisual,
-} = require('./cli-visualisation');
+} = require('./cli-visualization');
 const {
     genres,
 } = require('./resources');
@@ -25,134 +25,151 @@ const {
     runCrawler,
 } = require('./craw-runner/craw-runner');
 
-const argv = yargs.usage('usage: $0 <command>')
+yargs.usage('usage: $0 <command>')
     .command('statistics', 'run statistics', (stat) => {
         stat.usage('usage: $0 statistics <command>')
+            .demandCommand(1)
             .command('filter', 'filter entries', (filter) => {
                 filter.usage('usage: $0 statistics filter <command>')
-                    .command('runtime', 'filter entries by runtime', (runtime) => {
-                        runtime.usage('usage: $0 statistics filter runtime')
-                            .options({
-                                gt: {
-                                    describe: 'Grater than',
-                                    type: 'number',
-                                },
-                                lt: {
-                                    describe: 'Lower than',
-                                    type: 'number',
-                                },
-                                eq: {
-                                    describe: 'Equals',
-                                    type: 'number',
-                                },
-                            })
-                            .conflicts('gt', ['lt', 'eq'])
-                            .conflicts('lt', ['gt', 'eq'])
-                            .conflicts('eq', ['lt', 'gt'])
-                            .help('h')
-                            .alias('h', 'help');
-                    }, (args) => {
-                        let result;
-                        if (args.gt) {
-                            result = filterRuntime('greater', args.gt);
-                        } else if (args.lt) {
-                            result = filterRuntime('lower', args.lt);
-                        } else if (args.eq) {
-                            result = filterRuntime('equals', args.eq);
-                        } else {
-                            console.log('Not valid option');
-                            return;
-                        }
-                        result.then((res) => {
-                            filterRuntimeVisual(res);
+                    .demandCommand(1)
+                    .command('runtime', 'filter entries by runtime',
+                        (runtime) => {
+                            runtime
+                                .usage('usage: $0 statistics filter runtime')
+                                .options({
+                                    gt: {
+                                        describe: 'Grater than',
+                                        type: 'number',
+                                    },
+                                    lt: {
+                                        describe: 'Lower than',
+                                        type: 'number',
+                                    },
+                                    eq: {
+                                        describe: 'Equals',
+                                        type: 'number',
+                                    },
+                                })
+                                .conflicts('gt', ['lt', 'eq'])
+                                .conflicts('lt', ['gt', 'eq'])
+                                .conflicts('eq', ['lt', 'gt'])
+                                .help('h')
+                                .alias('h', 'help');
+                        }, (args) => {
+                            let result;
+                            if (args.gt) {
+                                result = filterRuntime('greater', args.gt);
+                            } else if (args.lt) {
+                                result = filterRuntime('lower', args.lt);
+                            } else if (args.eq) {
+                                result = filterRuntime('equals', args.eq);
+                            } else {
+                                console.log('Not valid option');
+                                return;
+                            }
+                            result.then((res) => {
+                                filterRuntimeVisual(res);
+                                process.exit();
+                            });
+                        }).command('rating', 'filter entries by rating',
+                        (rating) => {
+                            rating
+                                .usage('usage: $0 statistics filter rating')
+                                .options({
+                                    gt: {
+                                        describe: 'Grater than',
+                                        type: 'number',
+                                    },
+                                    lt: {
+                                        describe: 'Lower than',
+                                        type: 'number',
+                                    },
+                                    eq: {
+                                        describe: 'Equals',
+                                        type: 'number',
+                                    },
+                                })
+                                .conflicts('gt', ['lt', 'eq'])
+                                .conflicts('lt', ['gt', 'eq'])
+                                .conflicts('eq', ['lt', 'gt']);
+                        }, (args) => {
+                            let result;
+                            if (args.gt) {
+                                result = filterRating('greater', args.gt);
+                            } else if (args.lt) {
+                                result = filterRating('lower', args.lt);
+                            } else if (args.eq) {
+                                result = filterRating('equals', args.eq);
+                            } else {
+                                console.log('Not valid option');
+                                return;
+                            }
+                            result.then((res) => {
+                                filterRatingVisual(res);
+                                process.exit();
+                            });
+                        }).command('language', 'filter entries by language',
+                        (lang) => {
+                            lang
+                                .usage('usage: $0 statistics filter '+
+                                    'language [name]')
+                                .options({
+                                    name: {
+                                        describe: 'Language name',
+                                        type: 'string',
+                                        demandOption: true,
+                                        alias: 'n',
+                                    },
+                                })
+                                .help('h')
+                                .alias('h', 'help');
+                        }, (args) => {
+                            let result;
+                            if (args.name) {
+                                result = filterLanguage(args.name);
+                            } else {
+                                console.log('Not valid option');
+                                return;
+                            }
+                            result.then((res) => {
+                                filterLanguageVisual(res);
+                                process.exit();
+                            });
+                        }).command('genre', 'filter entries by genre',
+                        (genre) => {
+                            genre
+                                .usage('usage: $0 statistics filter' +
+                                    'genre [name]')
+                                .options({
+                                    name: {
+                                        describe: 'Genre name',
+                                        type: 'string',
+                                        demandOption: true,
+                                        alias: 'n',
+                                        choices: genres,
+                                    },
+                                })
+                                .help('h')
+                                .alias('h', 'help');
+                        }, (args) => {
+                            let result;
+                            if (args.name) {
+                                result = filterGenre(args.name);
+                            } else {
+                                console.log('Not valid option');
+                                return;
+                            }
+                            result.then((res) => {
+                                filterGenreVisual(res);
+                                process.exit();
+                            });
                         });
-                    }).command('rating', 'filter entries by rating', (rating) => {
-                        rating.usage('usage: $0 statistics filter rating')
-                            .options({
-                                gt: {
-                                    describe: 'Grater than',
-                                    type: 'number',
-                                },
-                                lt: {
-                                    describe: 'Lower than',
-                                    type: 'number',
-                                },
-                                eq: {
-                                    describe: 'Equals',
-                                    type: 'number',
-                                },
-                            })
-                            .conflicts('gt', ['lt', 'eq'])
-                            .conflicts('lt', ['gt', 'eq'])
-                            .conflicts('eq', ['lt', 'gt']);
-                    }, (args) => {
-                        let result;
-                        if (args.gt) {
-                            result = filterRating('greater', args.gt);
-                        } else if (args.lt) {
-                            result = filterRating('lower', args.lt);
-                        } else if (args.eq) {
-                            result = filterRating('equals', args.eq);
-                        } else {
-                            console.log('Not valid option');
-                            return;
-                        }
-                        result.then((res) => {
-                            filterRatingVisual(res);
-                        });
-                    }).command('language', 'filter entries by language', (lang) => {
-                        lang.usage('usage: $0 statistics filter language [name]')
-                            .options({
-                                name: {
-                                    describe: 'Language name',
-                                    type: 'string',
-                                    demandOption: true,
-                                    alias: 'n',
-                                },
-                            })
-                            .help('h')
-                            .alias('h', 'help');
-                    }, (args) => {
-                        let result;
-                        if (args.name) {
-                            result = filterLanguage(args.name);
-                        } else {
-                            console.log('Not valid option');
-                            return;
-                        }
-                        result.then((res) => {
-                            filterLanguageVisual(res);
-                        });
-                    }).command('genre', 'filter entries by genre', (genre) => {
-                        genre.usage('usage: $0 statistics filter genre [name]')
-                            .options({
-                                name: {
-                                    describe: 'Genre name',
-                                    type: 'string',
-                                    demandOption: true,
-                                    alias: 'n',
-                                    choices: genres,
-                                },
-                            })
-                            .help('h')
-                            .alias('h', 'help');
-                    }, (args) => {
-                        let result;
-                        if (args.name) {
-                            result = filterGenre(args.name);
-                        } else {
-                            console.log('Not valid option');
-                            return;
-                        }
-                        result.then((res) => {
-                            filterGenreVisual(res);
-                        });
-                    });
             }).command('search', 'search entries', (search) => {
-                search.usage('usage: $0 statistics search [option]')
+                search
+                    .usage('usage: $0 statistics search [option]')
                     .options({
                         director: {
-                            describe: 'Seacrh for a director',
+                            describe: 'Search for a director',
                             type: 'string',
                             alias: 'd',
                         },
@@ -175,10 +192,16 @@ const argv = yargs.usage('usage: $0 <command>')
                     return;
                 }
                 result.then((res) => {
-                    searchVisual(res);
+                    if (res) {
+                        searchVisual(res);
+                    } else {
+                        console.log('Data not found');
+                    }
+                    process.exit();
                 });
             }).command('sort', 'sort entries', (sorts) => {
-                sorts.usage('usage: $0 statistics sort [option]')
+                sorts
+                    .usage('usage: $0 statistics sort [option]')
                     .options({
                         by: {
                             describe: 'Sort by',
@@ -189,7 +212,7 @@ const argv = yargs.usage('usage: $0 <command>')
                         },
                         order: {
                             describe: 'Sort by ascending/descending' +
-                                 'order. By default it is descending.',
+                                'order. By default it is descending.',
                             type: 'string',
                             alias: 'o',
                             choices: ['asc', 'desc'],
@@ -210,6 +233,7 @@ const argv = yargs.usage('usage: $0 <command>')
                 }
                 result.then((res) => {
                     sortVisual(res);
+                    process.exit();
                 });
             });
     })
@@ -220,6 +244,7 @@ const argv = yargs.usage('usage: $0 <command>')
     }, (args) => {
         getAllInfo().then((res) => {
             getAllVisual(res);
+            process.exit();
         });
     })
     .command('update', 'Get the info and insert it into the DB', (update) => {
@@ -234,4 +259,4 @@ const argv = yargs.usage('usage: $0 <command>')
     .help('h')
     .alias('h', 'help')
     .wrap(null)
-    .argv;
+    .argv._.entries();
