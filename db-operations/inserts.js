@@ -7,38 +7,48 @@ const {
 } = db;
 
 const addEntry = async (object) => {
-    const l = await Languages.findOrCreate({
+    const movie = await Movies.create({
+        title: object.title,
+        runtime: object.runtime,
+        rating: object.rating,
+        revenue: object.revenue,
+        provider: object.provider,
+    });
+
+    Languages.findOrCreate({
         defaults: {
             language: object.language,
         },
         where: {
             language: object.language,
         },
+    }).then((ful) => {
+        movie.addLanguages([ful[0]]);
     });
-    const d = await Directors.findOrCreate({
-        director: object.directors[0],
-        where: {
-            director: object.directors[0],
-        },
+
+    object.directors.forEach((dir) => {
+        Directors.findOrCreate({
+            defaults: {
+                director: dir,
+            },
+            where: {
+                director: dir,
+            },
+        }).then((ful) => {
+            movie.addDirectors([ful[0]]);
+        });
     });
-    const g = await Genres.findOrCreate({
-        defaults: {
-            genre: object.genres[0],
-        },
-        where: {
-            genre: object.genres[0],
-        },
-    });
-    await Promise.all([l, d, g]).then((results) => {
-        Movies.create({
-            title: object.title,
-            runtime: object.runtime,
-            rating: object.rating,
-            revenue: object.revenue,
-        }).then((movie) => {
-            movie.addLanguages([results[0][0]]);
-            movie.addDirectors([results[1][0]]);
-            movie.addGenres([results[2][0]]);
+
+    object.genres.forEach((genre) => {
+        Genres.findOrCreate({
+            defaults: {
+                genre,
+            },
+            where: {
+                genre,
+            },
+        }).then((ful) => {
+            movie.addGenres([ful[0]]);
         });
     });
 };

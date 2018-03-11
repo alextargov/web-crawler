@@ -97,6 +97,7 @@ const searchMovie = async (input) => {
             directors: [],
             genres: [],
             languages: [],
+            provider: movie.provider,
         });
         movie.Directors.forEach((d) => {
             output[index].directors.push(d.director);

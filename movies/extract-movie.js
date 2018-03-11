@@ -35,6 +35,7 @@ const extractMovieImdb = (mainDomain, movieUrl) => {
                 revenueSelector,
             };
             const validatedData = validateImdb($, selectors);
+            validatedData.provider = 'IMDB';
             addEntry(validatedData);
             resolve(validatedData);
         });
@@ -67,6 +68,7 @@ const extractMovieTmdb = (mainDomain, movieUrl) => {
                     '.content_wrapper .split:nth-child(2) .crew_wrapper';
                 const validateDirector = validateTmdbCast($, directorSelector);
                 validatedData.directors = validateDirector;
+                validatedData.provider = 'TMDB';
                 addEntry(validatedData);
                 resolve(validatedData);
             });

@@ -14,7 +14,7 @@ const filterRatingVisual = (result) => {
             rating: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
         },

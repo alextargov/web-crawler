@@ -14,7 +14,7 @@ const filterRuntimeVisual = (result) => {
             runtime: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
         },

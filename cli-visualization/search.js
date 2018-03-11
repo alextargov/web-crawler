@@ -13,13 +13,13 @@ const searchVisual = (result) => {
             runtime: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
             rating: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
             revenue: {
@@ -27,11 +27,23 @@ const searchVisual = (result) => {
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
+                dataTransform: (data) => {
+                    if (data !== 'n/a') {
+                        return '$' + data;
+                    }
+                    return data;
+                },
             },
             directors: {
                 align: 'center',
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
+                },
+                dataTransform: (data) => {
+                    if (data.indexOf(',') !== -1) {
+                        return data.split(',').join(', ');
+                    }
+                    return data;
                 },
             },
             genres: {
@@ -39,11 +51,23 @@ const searchVisual = (result) => {
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
+                dataTransform: (data) => {
+                    if (data.indexOf(',') !== -1) {
+                        return data.split(',').join(', ');
+                    }
+                    return data;
+                },
             },
             languages: {
                 align: 'center',
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
+                },
+            },
+            provider: {
+                align: 'center',
+                headingTransform: (heading) => {
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
         },

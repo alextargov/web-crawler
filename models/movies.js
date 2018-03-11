@@ -20,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         revenue: {
             type: DataTypes.STRING,
         },
-    }, {
-
-    });
+        provider: {
+            type: DataTypes.STRING,
+        },
+    }, {});
     Movies.associate = (models) => {
         Movies.belongsToMany(models.Genres, {
             through: 'movie_genres',

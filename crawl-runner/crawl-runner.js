@@ -15,17 +15,29 @@ const entryPointTmdb = 'https://www.themoviedb.org/movie?page=';
 const mainDomainTmdb = 'https://www.themoviedb.org';
 
 const runCrawler = async () => {
-    const interval = setInterval(() => {
+    const intervalCrawl = setInterval(() => {
         process.stdout.write('.');
     }, 500);
+
     await deleteEntries();
     initialInsert();
     const imdb = loadPagesImdb(mainDomainImdb, entryPointImdb);
     const tmdb = loadPagesTmdb(mainDomainTmdb, entryPointTmdb);
 
-    return Promise.all([imdb, tmdb]).then(() => {
-        console.log('Finished');
-        clearInterval(interval);
+    Promise.all([imdb, tmdb]).then(() => {
+        console.log('Finished crawling \n');
+        clearInterval(intervalCrawl);
+
+        process.stdout.write('Waiting transactions and queries to finish');
+
+        const intervalQuery = setInterval(() => {
+            process.stdout.write('.');
+        }, 500);
+
+        setTimeout(() => {
+            clearInterval(intervalQuery);
+            process.exit();
+        }, 7000);
     });
 };
 

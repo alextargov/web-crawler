@@ -44,6 +44,7 @@ const getAllInfo = async () => {
             directors: [],
             genres: [],
             languages: [],
+            provider: movie.provider,
         };
 
         movie.Directors.forEach((d) => {

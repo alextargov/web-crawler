@@ -27,6 +27,12 @@ const getAllVisual = (result) => {
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
+                dataTransform: (data) => {
+                    if (data !== 'n/a') {
+                        return '$' + data;
+                    }
+                    return data;
+                },
             },
             directors: {
                 align: 'center',
@@ -56,6 +62,12 @@ const getAllVisual = (result) => {
                 align: 'center',
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
+                },
+            },
+            provider: {
+                align: 'center',
+                headingTransform: (heading) => {
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
         },

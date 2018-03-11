@@ -13,13 +13,13 @@ const sortVisual = (result) => {
             runtime: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
             rating: {
                 align: 'center',
                 headingTransform: (heading) => {
-                    return '***' + heading.toUpperCase() + '***';
+                    return '*' + heading.toUpperCase() + '*';
                 },
             },
             revenue: {
@@ -34,6 +34,7 @@ const sortVisual = (result) => {
                     return data;
                 },
             },
+            
         },
         columnSplitter: ' | ',
     }));

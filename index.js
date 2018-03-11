@@ -23,7 +23,7 @@ const {
 } = require('./resources');
 const {
     runCrawler,
-} = require('./craw-runner/craw-runner');
+} = require('./crawl-runner/crawl-runner');
 
 yargs.usage('usage: $0 <command>')
     .command('statistics', 'run statistics', (stat) => {
