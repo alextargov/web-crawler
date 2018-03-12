@@ -1,10 +1,11 @@
 {
   "name": "web-crawler",
   "version": "1.0.0",
-  "description": "Web crawler for TMDB & LetterBoxd",
-  "main": "app.js",
+  "description": "Web crawler for TMDB & IMDB",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "me": "node index.js"
   },
   "repository": {
     "type": "git",

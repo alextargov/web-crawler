@@ -37,6 +37,7 @@ const loadPagesImdb = async (mainDomain, entryPoint) => {
 const loadPagesTmdb = async (mainDomain, entryPoint) => {
     const pages = 5;
     const arr = [];
+
     try {
         await Promise.all(
             Array.from({
