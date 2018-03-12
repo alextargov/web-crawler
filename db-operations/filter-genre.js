@@ -9,30 +9,36 @@ const Op = Sequelize.Op;
 const filterGenre = async (input) => {
     let result = [];
     const output = [];
-    result = await Movies.findAll({
-        include: [{
-            model: Genres,
-            through: {
-                attributes: ['genre_id', 'movie_id'],
-            },
-            where: {
-                genre: {
-                    [Op.like]: '%' + input.toLowerCase() + '%',
+    try {
+        result = await Movies.findAll({
+            include: [{
+                model: Genres,
+                through: {
+                    attributes: ['genre_id', 'movie_id'],
                 },
-            },
-        }],
-    });
+                where: {
+                    genre: {
+                        [Op.like]: '%' + input.toLowerCase() + '%',
+                    },
+                },
+            }],
+        });
 
-    if (result.length === 0) {
+        if (result.length === 0) {
+            return null;
+        }
+
+        result.forEach((element) => {
+            output.push({
+                title: element.title,
+            });
+        });
+        return output;
+    } catch (err) {
+        console.log('Filter genres err');
+        console.log(err);
         return null;
     }
-
-    result.forEach((element) => {
-        output.push({
-            title: element.title,
-        });
-    });
-    return output;
 };
 
 module.exports = {

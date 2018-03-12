@@ -34,7 +34,6 @@ const sortVisual = (result) => {
                     return data;
                 },
             },
-            
         },
         columnSplitter: ' | ',
     }));

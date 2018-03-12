@@ -5,7 +5,7 @@ const availableGenres = new Set([...allGenres.genres]);
 /* eslint-enable */
 const validateImdb = ($, selectors) => {
     let directors = [];
-    let language;
+    let languages;
     let runtime;
     let revenue;
     $(selectors.directorSelector).first()
@@ -18,13 +18,13 @@ const validateImdb = ($, selectors) => {
     }
     if ($($(selectors.languageSelector).get(2)).find('a')
         .text().trim().length < 3) {
-        language = null;
+        languages = [null];
     } else {
         if ($($(selectors.languageSelector).get(2)).find('h4').text()
             .trim().indexOf('Language') === -1) {
-            language = null;
+            languages = [null];
         } else {
-            language = $($(selectors.languageSelector).get(2))
+            languages = $($(selectors.languageSelector).get(2))
                 .text()
                 .trim()
                 .slice(9)
@@ -73,7 +73,7 @@ const validateImdb = ($, selectors) => {
         runtime,
         genres,
         directors,
-        language,
+        languages,
         revenue,
     };
 };
@@ -81,7 +81,7 @@ const validateImdb = ($, selectors) => {
 const validateTmdb = ($, selectors) => {
     let revenue;
     let runtime;
-    let language;
+    let languages;
     let genres = [];
 
     $(selectors.genresSelector).each((_, el) => {
@@ -106,12 +106,13 @@ const validateTmdb = ($, selectors) => {
         }
     }
     if ($($(selectors.languageSelector).get(2)).text().slice(16).length < 4) {
-        language = null;
+        languages = [null];
     } else {
-        language = $($(selectors.languageSelector).get(2))
+        languages = $($(selectors.languageSelector).get(2))
             .text()
             .trim()
-            .slice(18);
+            .slice(18)
+            .split(' ');
     }
 
     if ($($(selectors.revenueSelector).get(5)).text().slice(8).length < 4) {
@@ -135,7 +136,7 @@ const validateTmdb = ($, selectors) => {
         rating,
         runtime,
         genres,
-        language,
+        languages,
         revenue,
     };
 };

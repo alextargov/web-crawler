@@ -50,66 +50,77 @@ const searchDirector = async (input) => {
 
 const searchMovie = async (input) => {
     const output = [];
-    const result = await Movies.findAll({
-        where: {
-            title: {
-                [Op.or]: [{
-                        [Op.eq]: input,
+    try {
+        const result = await Movies.findAll({
+            where: {
+                title: {
+                    [Op.or]: [{
+                            [Op.eq]: input,
+                        },
+                        {
+                            [Op.like]: '%' + input + '%',
+                        },
+                    ],
+                },
+            },
+            include: [{
+                    model: Directors,
+                    through: {
+                        attributes: ['director_id', 'movie_id'],
                     },
-                    {
-                        [Op.like]: '%' + input + '%',
+                },
+                {
+                    model: Languages,
+                    through: {
+                        attributes: ['language_id', 'movie_id'],
                     },
-                ],
-            },
-        },
-        include: [{
-                model: Directors,
-                through: {
-                    attributes: ['director_id', 'movie_id'],
                 },
-            },
-            {
-                model: Languages,
-                through: {
-                    attributes: ['language_id', 'movie_id'],
+                {
+                    model: Genres,
+                    through: {
+                        attributes: ['genre_id', 'movie_id'],
+                    },
                 },
-            },
-            {
-                model: Genres,
-                through: {
-                    attributes: ['genre_id', 'movie_id'],
-                },
-            },
-        ],
-    });
+            ],
+        });
 
+        if (result.length === 0) {
+            return null;
+        }
 
-    if (result.length === 0) {
+        result.forEach((movie, index) => {
+            const obj = {
+                title: movie.title,
+                runtime: movie.runtime,
+                rating: movie.rating,
+                revenue: movie.revenue,
+                directors: [],
+                genres: [],
+                languages: [],
+                provider: movie.provider,
+            };
+
+            if (!obj.revenue) {
+                obj.revenue = 'n/a';
+            }
+
+            output.push(obj);
+
+            movie.Directors.forEach((d) => {
+                output[index].directors.push(d.director);
+            });
+            movie.Genres.forEach((g) => {
+                output[index].genres.push(g.genre);
+            });
+            movie.Languages.forEach((lang) => {
+                output[index].languages.push(lang.language);
+            });
+        });
+        return output;
+    } catch (err) {
+        console.log(err);
         return null;
     }
-
-    result.forEach((movie, index) => {
-        output.push({
-            title: movie.title,
-            runtime: movie.runtime,
-            rating: movie.rating,
-            revenue: movie.revenue,
-            directors: [],
-            genres: [],
-            languages: [],
-            provider: movie.provider,
-        });
-        movie.Directors.forEach((d) => {
-            output[index].directors.push(d.director);
-        });
-        movie.Genres.forEach((g) => {
-            output[index].genres.push(g.genre);
-        });
-        movie.Languages.forEach((lang) => {
-            output[index].languages.push(lang.language);
-        });
-    });
-    return output;
 };
 
 module.exports = {

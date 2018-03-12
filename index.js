@@ -1,14 +1,19 @@
+/* globals process */
 const yargs = require('yargs');
+
 const {
     getAllInfo,
-    filterGenre,
-    filterRuntime,
-    filterRating,
-    filterLanguage,
-    searchMovie,
-    searchDirector,
-    sort,
 } = require('./db-operations');
+
+const {
+    filterRuntimeYargs,
+    filterRatingYargs,
+    filterLanguageYargs,
+    filterGenreYargs,
+    searchYargs,
+    sortYargs,
+} = require('./yargs-validators');
+
 const {
     filterGenreVisual,
     filterLanguageVisual,
@@ -18,9 +23,11 @@ const {
     sortVisual,
     getAllVisual,
 } = require('./cli-visualization');
+
 const {
     genres,
 } = require('./resources');
+
 const {
     runCrawler,
 } = require('./crawl-runner/crawl-runner');
@@ -56,18 +63,9 @@ yargs.usage('usage: $0 <command>')
                                 .help('h')
                                 .alias('h', 'help');
                         }, (args) => {
-                            let result;
-                            if (args.gt) {
-                                result = filterRuntime('greater', args.gt);
-                            } else if (args.lt) {
-                                result = filterRuntime('lower', args.lt);
-                            } else if (args.eq) {
-                                result = filterRuntime('equals', args.eq);
-                            } else {
-                                console.log('Not valid option');
-                                return;
-                            }
+                            const result = filterRuntimeYargs(args);
                             result.then((res) => {
+                                console.log();
                                 filterRuntimeVisual(res);
                                 process.exit();
                             });
@@ -93,25 +91,17 @@ yargs.usage('usage: $0 <command>')
                                 .conflicts('lt', ['gt', 'eq'])
                                 .conflicts('eq', ['lt', 'gt']);
                         }, (args) => {
-                            let result;
-                            if (args.gt) {
-                                result = filterRating('greater', args.gt);
-                            } else if (args.lt) {
-                                result = filterRating('lower', args.lt);
-                            } else if (args.eq) {
-                                result = filterRating('equals', args.eq);
-                            } else {
-                                console.log('Not valid option');
-                                return;
-                            }
+                            const result = filterRatingYargs(args);
+
                             result.then((res) => {
+                                console.log();
                                 filterRatingVisual(res);
                                 process.exit();
                             });
                         }).command('language', 'filter entries by language',
                         (lang) => {
                             lang
-                                .usage('usage: $0 statistics filter '+
+                                .usage('usage: $0 statistics filter ' +
                                     'language [name]')
                                 .options({
                                     name: {
@@ -124,14 +114,10 @@ yargs.usage('usage: $0 <command>')
                                 .help('h')
                                 .alias('h', 'help');
                         }, (args) => {
-                            let result;
-                            if (args.name) {
-                                result = filterLanguage(args.name);
-                            } else {
-                                console.log('Not valid option');
-                                return;
-                            }
+                            const result = filterLanguageYargs(args);
+
                             result.then((res) => {
+                                console.log();
                                 filterLanguageVisual(res);
                                 process.exit();
                             });
@@ -152,14 +138,10 @@ yargs.usage('usage: $0 <command>')
                                 .help('h')
                                 .alias('h', 'help');
                         }, (args) => {
-                            let result;
-                            if (args.name) {
-                                result = filterGenre(args.name);
-                            } else {
-                                console.log('Not valid option');
-                                return;
-                            }
+                            const result = filterGenreYargs(args);
+
                             result.then((res) => {
+                                console.log();
                                 filterGenreVisual(res);
                                 process.exit();
                             });
@@ -182,16 +164,10 @@ yargs.usage('usage: $0 <command>')
                     .help('h')
                     .alias('h', 'help');
             }, (args) => {
-                let result;
-                if (args.director) {
-                    result = searchDirector(args.director);
-                } else if (args.movie) {
-                    result = searchMovie(args.movie);
-                } else {
-                    console.log('Not valid option');
-                    return;
-                }
+                const result = searchYargs(args);
+
                 result.then((res) => {
+                    console.log();
                     if (res) {
                         searchVisual(res);
                     } else {
@@ -221,17 +197,10 @@ yargs.usage('usage: $0 <command>')
                     .help('h')
                     .alias('h', 'help');
             }, (args) => {
-                let result;
-                if (!args.by) {
-                    console.log('Not valid option.');
-                    return;
-                }
-                if (args.order) {
-                    result = sort(args.by, args.order);
-                } else {
-                    result = sort(args.by);
-                }
+                const result = sortYargs(args);
+
                 result.then((res) => {
+                    console.log();
                     sortVisual(res);
                     process.exit();
                 });
@@ -243,6 +212,7 @@ yargs.usage('usage: $0 <command>')
             .alias('h', 'help');
     }, (args) => {
         getAllInfo().then((res) => {
+            console.log();
             getAllVisual(res);
             process.exit();
         });
@@ -252,6 +222,7 @@ yargs.usage('usage: $0 <command>')
             .help('h')
             .alias('h', 'help');
     }, async (args) => {
+        console.log();
         await runCrawler();
     })
     .demandCommand(1)

@@ -6,6 +6,7 @@ const getAllVisual = (result) => {
         config: {
             title: {
                 align: 'center',
+                maxWidth: 50,
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
@@ -36,6 +37,7 @@ const getAllVisual = (result) => {
             },
             directors: {
                 align: 'center',
+                maxWidth: 35,
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
@@ -48,6 +50,7 @@ const getAllVisual = (result) => {
             },
             genres: {
                 align: 'center',
+                maxWidth: 35,
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
@@ -60,8 +63,15 @@ const getAllVisual = (result) => {
             },
             languages: {
                 align: 'center',
+                maxWidth: 30,
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
+                },
+                dataTransform: (data) => {
+                    if (data.indexOf(',') !== -1) {
+                        return data.split(',').join(', ');
+                    }
+                    return data;
                 },
             },
             provider: {
@@ -71,7 +81,7 @@ const getAllVisual = (result) => {
                 },
             },
         },
-        columnSplitter: ' | ',
+        columnSplitter: '|',
     }));
 };
 

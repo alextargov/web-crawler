@@ -1,3 +1,4 @@
+/* globals process */
 const {
     loadPagesImdb,
     loadPagesTmdb,
@@ -15,6 +16,7 @@ const entryPointTmdb = 'https://www.themoviedb.org/movie?page=';
 const mainDomainTmdb = 'https://www.themoviedb.org';
 
 const runCrawler = async () => {
+    process.stdout.write('Started crawling');
     const intervalCrawl = setInterval(() => {
         process.stdout.write('.');
     }, 500);

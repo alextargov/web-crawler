@@ -63,6 +63,12 @@ const searchVisual = (result) => {
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
                 },
+                dataTransform: (data) => {
+                    if (data.indexOf(',') !== -1) {
+                        return data.split(',').join(', ');
+                    }
+                    return data;
+                },
             },
             provider: {
                 align: 'center',

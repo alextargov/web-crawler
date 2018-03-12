@@ -2,10 +2,10 @@ const db = require('../models');
 
 const {
     languages,
-} = require('../resources/languages');
+} = require('../resources');
 const {
     genres,
-} = require('../resources/genres');
+} = require('../resources');
 
 const {
     Languages,

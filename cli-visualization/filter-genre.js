@@ -5,7 +5,7 @@ const filterGenreVisual = (result) => {
         columnSplitter: ' | ',
         config: {
             title: {
-                align: 'center',
+                align: 'left',
                 maxWidth: 60,
                 headingTransform: (heading) => {
                     return '***' + heading.toUpperCase() + '***';
