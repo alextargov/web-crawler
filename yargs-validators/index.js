@@ -9,7 +9,7 @@ const {
 } = require('./filter-language');
 const {
     filterGenreYargs,
-} = require('./filter-language');
+} = require('./filter-genre');
 const {
     searchYargs,
 } = require('./search');

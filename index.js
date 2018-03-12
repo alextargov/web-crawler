@@ -66,7 +66,11 @@ yargs.usage('usage: $0 <command>')
                             const result = filterRuntimeYargs(args);
                             result.then((res) => {
                                 console.log();
-                                filterRuntimeVisual(res);
+                                if (res) {
+                                    filterRuntimeVisual(res);
+                                } else {
+                                    console.log('No data found');
+                                }
                                 process.exit();
                             });
                         }).command('rating', 'filter entries by rating',
@@ -95,7 +99,11 @@ yargs.usage('usage: $0 <command>')
 
                             result.then((res) => {
                                 console.log();
-                                filterRatingVisual(res);
+                                if (res) {
+                                    filterRatingVisual(res);
+                                } else {
+                                    console.log('No data found');
+                                }
                                 process.exit();
                             });
                         }).command('language', 'filter entries by language',
@@ -118,7 +126,11 @@ yargs.usage('usage: $0 <command>')
 
                             result.then((res) => {
                                 console.log();
-                                filterLanguageVisual(res);
+                                if (res) {
+                                    filterLanguageVisual(res);
+                                } else {
+                                    console.log('No data found');
+                                }
                                 process.exit();
                             });
                         }).command('genre', 'filter entries by genre',
@@ -171,7 +183,7 @@ yargs.usage('usage: $0 <command>')
                     if (res) {
                         searchVisual(res);
                     } else {
-                        console.log('Data not found');
+                        console.log('No data found');
                     }
                     process.exit();
                 });
@@ -187,7 +199,7 @@ yargs.usage('usage: $0 <command>')
                             choices: ['revenue', 'rating', 'runtime', 'title'],
                         },
                         order: {
-                            describe: 'Sort by ascending/descending' +
+                            describe: 'Sort smth in ascending/descending ' +
                                 'order. By default it is descending.',
                             type: 'string',
                             alias: 'o',
@@ -213,7 +225,11 @@ yargs.usage('usage: $0 <command>')
     }, (args) => {
         getAllInfo().then((res) => {
             console.log();
-            getAllVisual(res);
+            if (res) {
+                getAllVisual(res);
+            } else {
+                console.log('No data found');
+            }
             process.exit();
         });
     })

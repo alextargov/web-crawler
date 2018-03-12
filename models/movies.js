@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         runtime: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
         },
         rating: {
             type: DataTypes.INTEGER,
         },
         revenue: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
         },
         provider: {
             type: DataTypes.STRING,
