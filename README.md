@@ -17,23 +17,23 @@ The information gathered is stored in a DB and then visualized. The user can per
  * statistics
   * filter
    * runtime
-    * [option] gt -> Filters the entries by runtime greater than provided __value__
-    * [option] lt -> Filters the entries by runtime lower than provided __value__
-    * [option] eq -> Filters the entries by runtime equals provided __value__
+      * [option] gt -> Filters the entries by runtime greater than provided __value__
+      * [option] lt -> Filters the entries by runtime lower than provided __value__
+      * [option] eq -> Filters the entries by runtime equals provided __value__
    * rating
-    * [option] gt -> Filters the entries by runtime greater than provided __value__
-    * [option] lt -> Filters the entries by runtime lower than provided __value__
-    * [option] eq -> Filters the entries by runtime equals provided __value__
+      * [option] gt -> Filters the entries by runtime greater than provided __value__
+      * [option] lt -> Filters the entries by runtime lower than provided __value__
+      * [option] eq -> Filters the entries by runtime equals provided __value__
    * language
-    * [option] name -> Filter the entries by provided language
+      * [option] name -> Filter the entries by provided language
    * genre
-    * [option] name -> Filter the entries by provided genre
+      * [option] name -> Filter the entries by provided genre
   * search
-   * [option] director -> Search the entries by provided director name
-   * [option] movie -> Search the entries by provided movie name
+      * [option] director -> Search the entries by provided director name
+      * [option] movie -> Search the entries by provided movie name
   * sort
-   * [option] [required] [choices: ['revenue', 'rating', 'runtime', 'title']] by -> Sort entries by __value__
-   * [option] [choices: ['asc', 'desc']] order -> Sort entries in ascending/descending order. __Default: desc__
+      * [option] [required] [choices: ['revenue', 'rating', 'runtime', 'title']] by -> Sort entries by __value__
+      * [option] [choices: ['asc', 'desc']] order -> Sort entries in ascending/descending order. __Default: desc__
  * update -> Deletes the db entries, scrapes the information and stores it in the db
  * get-all -> Gets the information from the db and visualizes it in the console
  
