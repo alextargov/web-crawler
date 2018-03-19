@@ -1,4 +1,6 @@
-const { JSDOM } = require('jsdom');
+const {
+    JSDOM,
+} = require('jsdom');
 const $init = require('jquery');
 
 const domParser = async (url) => {
@@ -7,8 +9,8 @@ const domParser = async (url) => {
         const $ = $init(dom.window);
         return $;
     } catch (err) {
-        console.log('DOM Parser error: ');
-        console.log(err);
+        console.log(url);
+        domParser(url);
         return null;
     }
 };

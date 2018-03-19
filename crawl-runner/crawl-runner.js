@@ -21,13 +21,21 @@ const runCrawler = async () => {
         process.stdout.write('.');
     }, 500);
 
-    await deleteEntries();
+    try {
+        await deleteEntries();
+    } catch (err) {
+        console.log('Delete error: ');
+        console.log(err);
+    }
+
     initialInsert();
+
     const imdb = loadPagesImdb(mainDomainImdb, entryPointImdb);
     const tmdb = loadPagesTmdb(mainDomainTmdb, entryPointTmdb);
-
-    Promise.all([imdb, tmdb]).then(() => {
+    try {
+        await Promise.all([imdb, tmdb]);
         console.log('Finished crawling \n');
+
         clearInterval(intervalCrawl);
 
         process.stdout.write('Waiting transactions and queries to finish');
@@ -39,8 +47,10 @@ const runCrawler = async () => {
         setTimeout(() => {
             clearInterval(intervalQuery);
             process.exit();
-        }, 7000);
-    });
+        });
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports = {
